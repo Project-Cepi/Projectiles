@@ -23,6 +23,8 @@ class Projectile(
     val speed: Vector = Vector(15.0, 15.0, 15.0),
     @Serializable(with = UpdateOptionSerializer::class)
     val updateOption: UpdateOption = UpdateOption(10, TimeUnit.TICK),
+    @Serializable(with = VectorSerializer::class)
+    val recoil: Vector = Vector(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString()
 ) {
 
@@ -50,7 +52,12 @@ class Projectile(
 
         entity.setInstance(
             shooter.instance ?: return,
-            shooter.position.clone().add(.0, shooter.eyeHeight, .0)
+            shooter.position.clone()
+                .add(.0, shooter.eyeHeight / 2, .0)
+                .add(shooter.position.direction
+                    .clone().normalize()
+                    .divide(Vector(5.0, 5.0, 5.0)).toPosition()
+                )
         )
 
         entity.velocity.add(entity.position.direction.normalize().multiply(speed))

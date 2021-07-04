@@ -2,6 +2,7 @@ package world.cepi.projectile.commands
 
 import net.minestom.server.command.builder.Command
 import net.minestom.server.entity.Player
+import net.minestom.server.tag.Tag
 import world.cepi.kstom.command.addSyntax
 import world.cepi.kstom.command.arguments.literal
 import world.cepi.kstom.item.and
@@ -35,6 +36,9 @@ object ProjectileCommand : Command("projectile") {
 
             player.itemInMainHand = player.itemInMainHand.and {
                 withMeta {
+
+                    this.set(Tag.Byte("noSpawn"), 1)
+
                     clientData {
                         this[Projectile.projectileKey] = projectile
                     }
