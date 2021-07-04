@@ -17,6 +17,7 @@ import world.cepi.kstom.serializer.VectorSerializer
 import world.cepi.kstom.util.component1
 import world.cepi.kstom.util.component2
 import world.cepi.kstom.util.component3
+import world.cepi.kstom.util.spread
 import world.cepi.mob.mob.Mob
 import world.cepi.mob.util.MobUtils
 
@@ -32,7 +33,9 @@ class Projectile(
     var amount: Int = 1,
     @Serializable(with = SoundSerializer::class)
     var sound: Sound? = null,
-    var usedEnergy: Int
+    var usedEnergy: Int = 0,
+    @Serializable(with = VectorSerializer::class)
+    var spread: Vector = Vector(.0, .0, .0)
 ) {
 
     fun lastTime() = lastTimeUsed.toLong()
@@ -71,6 +74,13 @@ class Projectile(
 
             shooter.playSound(sound!!, x, y, z)
         }
+
+        val shootDirection = shooter.position.clone()
+            .add(.0, shooter.eyeHeight / 2, .0)
+            .add(shooter.position.direction
+                .clone().normalize()
+                .divide(Vector(5.0, 5.0, 5.0)).toPosition()
+            ).toVector().spread(spread)
 
         repeat(amount) {
             val entity = mob.generateMob() ?: return
