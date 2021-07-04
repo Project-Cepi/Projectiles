@@ -13,7 +13,7 @@ import world.cepi.mob.util.MobUtils
 import world.cepi.projectile.Projectile
 import world.cepi.projectile.heldProjectile
 
-object ProjectileCommand : Command("projectile") {
+internal object ProjectileCommand : Command("projectile") {
 
     init {
         val create = "create".literal()
@@ -59,6 +59,8 @@ object ProjectileCommand : Command("projectile") {
             val projectile = player.heldProjectile ?: return@addSyntax
             projectile.shoot(player.mobEgg ?: return@addSyntax, player)
         }
+
+        addSubcommand(PropertySubcommand)
     }
 
 }

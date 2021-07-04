@@ -20,23 +20,20 @@ import world.cepi.mob.util.MobUtils
 @Serializable
 class Projectile(
     @Serializable(with = VectorSerializer::class)
-    val speed: Vector = Vector(15.0, 15.0, 15.0),
+    var power: Vector = Vector(15.0, 15.0, 15.0),
     @Serializable(with = UpdateOptionSerializer::class)
     val updateOption: UpdateOption = UpdateOption(10, TimeUnit.TICK),
     @Serializable(with = VectorSerializer::class)
-    val recoil: Vector = Vector(.0, .0, .0),
-    var lastTimeUsed: String = System.currentTimeMillis().toString()
+    var recoil: Vector = Vector(.0, .0, .0),
+    var lastTimeUsed: String = System.currentTimeMillis().toString(),
+    var amount: Int = 1
 ) {
 
     fun lastTime() = lastTimeUsed.toLong()
 
     fun shoot(mob: Mob, shooter: Entity) {
 
-        if (Cooldown.hasCooldown(
-                System.currentTimeMillis(),
-                lastTime(),
-                updateOption
-            )) {
+        if (System.currentTimeMillis() - lastTime() < updateOption.toMilliseconds()) {
 
             if (shooter is Player) {
                 shooter.playSound(
@@ -48,19 +45,26 @@ class Projectile(
             return
         }
 
-        val entity = mob.generateMob() ?: return
+        repeat(amount) {
+            val entity = mob.generateMob() ?: return
 
-        entity.setInstance(
-            shooter.instance ?: return,
-            shooter.position.clone()
-                .add(.0, shooter.eyeHeight / 2, .0)
-                .add(shooter.position.direction
-                    .clone().normalize()
-                    .divide(Vector(5.0, 5.0, 5.0)).toPosition()
-                )
-        )
+            entity.setInstance(
+                shooter.instance ?: return,
+                shooter.position.clone()
+                    .add(.0, shooter.eyeHeight / 2, .0)
+                    .add(shooter.position.direction
+                        .clone().normalize()
+                        .divide(Vector(5.0, 5.0, 5.0)).toPosition()
+                    )
+            )
 
-        entity.velocity.add(entity.position.direction.normalize().multiply(speed))
+            // Add forward projectile speed
+            entity.velocity.add(entity.position.direction.clone().normalize().multiply(power))
+        }
+
+        // Add recoil
+        shooter.velocity.add(shooter.position.direction.clone()
+            .normalize().multiply(-1).multiply(recoil))
 
         lastTimeUsed = System.currentTimeMillis().toString()
     }
