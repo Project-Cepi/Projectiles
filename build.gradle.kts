@@ -48,6 +48,9 @@ dependencies {
 
     // add mobs
     compileOnly("com.github.Project-Cepi:MobExtension:b1d7b0cc8e")
+
+    // add energy
+    compileOnly("com.github.Project-Cepi:EnergyExtension:12d8826a68")
 }
 tasks.withType<Test> {
     useJUnitPlatform()

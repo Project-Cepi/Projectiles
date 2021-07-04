@@ -9,6 +9,7 @@ import net.minestom.server.sound.SoundEvent
 import net.minestom.server.utils.Vector
 import net.minestom.server.utils.time.TimeUnit
 import net.minestom.server.utils.time.UpdateOption
+import world.cepi.energy.energy
 import world.cepi.kstom.item.get
 import world.cepi.kstom.serializer.SoundSerializer
 import world.cepi.kstom.serializer.UpdateOptionSerializer
@@ -30,13 +31,15 @@ class Projectile(
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
     var amount: Int = 1,
     @Serializable(with = SoundSerializer::class)
-    var sound: Sound? = null
+    var sound: Sound? = null,
+    var usedEnergy: Int
 ) {
 
     fun lastTime() = lastTimeUsed.toLong()
 
     fun shoot(mob: Mob, shooter: Entity) {
 
+        // Respect cooldown
         if (System.currentTimeMillis() - lastTime() < updateOption.toMilliseconds()) {
 
             if (shooter is Player) {
@@ -47,6 +50,19 @@ class Projectile(
             }
 
             return
+        }
+
+        // Respect energy
+        if (shooter is Player && shooter.energy < usedEnergy) {
+
+            shooter.playSound(
+                Sound.sound(SoundEvent.NOTE_BLOCK_PLING, Sound.Source.MASTER, 1f, 0.5f),
+                shooter.position.x, shooter.position.y, shooter.position.z
+            )
+
+            return
+        } else if (shooter is Player) {
+            shooter.energy -= usedEnergy
         }
 
         if (sound != null && shooter is Player) {
