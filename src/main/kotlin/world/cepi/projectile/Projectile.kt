@@ -10,6 +10,7 @@ import net.minestom.server.utils.Vector
 import net.minestom.server.utils.time.TimeUnit
 import net.minestom.server.utils.time.UpdateOption
 import world.cepi.kstom.item.get
+import world.cepi.kstom.serializer.SoundSerializer
 import world.cepi.kstom.serializer.UpdateOptionSerializer
 import world.cepi.kstom.serializer.VectorSerializer
 import world.cepi.kstom.util.component1
@@ -28,6 +29,7 @@ class Projectile(
     var recoil: Vector = Vector(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
     var amount: Int = 1,
+    @Serializable(with = SoundSerializer::class)
     var sound: Sound? = null
 ) {
 

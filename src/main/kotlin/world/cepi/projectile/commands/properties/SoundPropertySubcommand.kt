@@ -16,7 +16,7 @@ import world.cepi.projectile.heldProjectile
 
 internal object SoundPropertySubcommand : Command("sound") {
     init {
-        val sound = ArgumentType.String("sound").map {
+        val sound = ArgumentType.String("soundName").map {
             Key.key(it)
         }
 
@@ -24,7 +24,7 @@ internal object SoundPropertySubcommand : Command("sound") {
             .setFormat(ArgumentEnum.Format.LOWER_CASED)
             .setDefaultValue(Sound.Source.MASTER)
 
-        val volume = ArgumentType.Float("yaw").min(0f).max(2f).defaultValue(1f)
+        val volume = ArgumentType.Float("volume").min(0f).max(2f).defaultValue(1f)
         val pitch = ArgumentType.Float("pitch").min(0f).max(2f).defaultValue(1f)
 
         addSyntax(sound, source, volume, pitch) {
