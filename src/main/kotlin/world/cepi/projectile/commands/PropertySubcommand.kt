@@ -6,6 +6,7 @@ import world.cepi.kstom.command.addSubcommands
 import world.cepi.projectile.commands.properties.AmountPropertySubcommand
 import world.cepi.projectile.commands.properties.PowerPropertySubcommand
 import world.cepi.projectile.commands.properties.RecoilPropertySubcommand
+import world.cepi.projectile.commands.properties.SoundPropertySubcommand
 
 internal object PropertySubcommand : Command("property") {
 
@@ -19,7 +20,8 @@ internal object PropertySubcommand : Command("property") {
     init {
         addSubcommands(
             RecoilPropertySubcommand, PowerPropertySubcommand,
-            AmountPropertySubcommand
+            AmountPropertySubcommand,
+            SoundPropertySubcommand
         )
     }
 

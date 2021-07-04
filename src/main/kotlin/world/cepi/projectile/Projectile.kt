@@ -1,19 +1,20 @@
 package world.cepi.projectile
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import net.kyori.adventure.sound.Sound
 import net.minestom.server.command.CommandSender
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.sound.SoundEvent
 import net.minestom.server.utils.Vector
-import net.minestom.server.utils.time.Cooldown
 import net.minestom.server.utils.time.TimeUnit
 import net.minestom.server.utils.time.UpdateOption
 import world.cepi.kstom.item.get
 import world.cepi.kstom.serializer.UpdateOptionSerializer
 import world.cepi.kstom.serializer.VectorSerializer
+import world.cepi.kstom.util.component1
+import world.cepi.kstom.util.component2
+import world.cepi.kstom.util.component3
 import world.cepi.mob.mob.Mob
 import world.cepi.mob.util.MobUtils
 
@@ -26,7 +27,8 @@ class Projectile(
     @Serializable(with = VectorSerializer::class)
     var recoil: Vector = Vector(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
-    var amount: Int = 1
+    var amount: Int = 1,
+    var sound: Sound? = null
 ) {
 
     fun lastTime() = lastTimeUsed.toLong()
@@ -43,6 +45,13 @@ class Projectile(
             }
 
             return
+        }
+
+        if (sound != null && shooter is Player) {
+
+            val (x, y, z) = shooter.position
+
+            shooter.playSound(sound!!, x, y, z)
         }
 
         repeat(amount) {

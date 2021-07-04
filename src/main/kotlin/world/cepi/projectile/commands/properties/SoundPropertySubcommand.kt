@@ -1,20 +1,33 @@
 package world.cepi.projectile.commands.properties
 
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.command.builder.Command
+import net.minestom.server.command.builder.arguments.ArgumentEnum
 import net.minestom.server.command.builder.arguments.ArgumentType
 import net.minestom.server.entity.Player
 import world.cepi.kstom.command.addSyntax
+import world.cepi.kstom.command.arguments.defaultValue
 import world.cepi.kstom.item.and
 import world.cepi.kstom.item.clientData
 import world.cepi.kstom.item.withMeta
 import world.cepi.projectile.Projectile
 import world.cepi.projectile.heldProjectile
 
-internal object AmountPropertySubcommand : Command("amount") {
+internal object SoundPropertySubcommand : Command("sound") {
     init {
-        val amount = ArgumentType.Integer("amount").min(0).max(20)
+        val sound = ArgumentType.String("sound").map {
+            Key.key(it)
+        }
 
-        addSyntax(amount) {
+        val source = ArgumentType.Enum("source", Sound.Source::class.java)
+            .setFormat(ArgumentEnum.Format.LOWER_CASED)
+            .setDefaultValue(Sound.Source.MASTER)
+
+        val volume = ArgumentType.Float("yaw").min(0f).max(2f).defaultValue(1f)
+        val pitch = ArgumentType.Float("pitch").min(0f).max(2f).defaultValue(1f)
+
+        addSyntax(sound, source, volume, pitch) {
             if (!Projectile.hasProjectile(sender)) {
                 return@addSyntax
             }
@@ -23,7 +36,10 @@ internal object AmountPropertySubcommand : Command("amount") {
 
             val projectile = player.heldProjectile ?: return@addSyntax
 
-            projectile.amount = context[amount]
+            projectile.sound = Sound.sound(
+                context[sound], context[source],
+                context[volume], context[pitch]
+            )
 
             player.itemInMainHand = player.itemInMainHand.and {
                 withMeta {
