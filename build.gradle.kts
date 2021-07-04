@@ -45,6 +45,9 @@ dependencies {
 
     // add kstom
     compileOnly("com.github.Project-Cepi:KStom:de07a46255")
+
+    // add mobs
+    compileOnly("com.github.Project-Cepi:MobExtension:b1d7b0cc8e")
 }
 tasks.withType<Test> {
     useJUnitPlatform()
