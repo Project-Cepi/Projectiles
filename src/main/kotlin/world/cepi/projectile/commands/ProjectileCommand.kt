@@ -10,8 +10,8 @@ import world.cepi.kstom.item.clientData
 import world.cepi.kstom.item.withMeta
 import world.cepi.mob.mob.mobEgg
 import world.cepi.mob.util.MobUtils
-import world.cepi.projectile.Projectile
-import world.cepi.projectile.heldProjectile
+import world.cepi.projectile.structure.Projectile
+import world.cepi.projectile.structure.heldProjectile
 
 internal object ProjectileCommand : Command("projectile") {
 

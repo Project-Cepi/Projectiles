@@ -4,12 +4,12 @@ import net.minestom.server.command.builder.Command
 import net.minestom.server.entity.Player
 import net.minestom.server.utils.Vector
 import world.cepi.kstom.command.addSyntax
-import world.cepi.projectile.Projectile
-import world.cepi.projectile.heldProjectile
 import world.cepi.kstom.item.and
 import world.cepi.kstom.item.clientData
 import world.cepi.kstom.item.withMeta
 import world.cepi.projectile.commands.PropertySubcommand
+import world.cepi.projectile.structure.Projectile
+import world.cepi.projectile.structure.heldProjectile
 
 internal open class GeneralVectorPropertySubcommand(
     name: String,

@@ -1,4 +1,4 @@
-package world.cepi.projectile
+package world.cepi.projectile.structure
 
 import kotlinx.serialization.Serializable
 import net.kyori.adventure.sound.Sound
@@ -8,25 +8,22 @@ import net.minestom.server.entity.Player
 import net.minestom.server.sound.SoundEvent
 import net.minestom.server.utils.Vector
 import net.minestom.server.utils.time.TimeUnit
-import net.minestom.server.utils.time.UpdateOption
 import world.cepi.energy.energy
 import world.cepi.kstom.item.get
+import world.cepi.kstom.serializer.DurationSerializer
 import world.cepi.kstom.serializer.SoundSerializer
-import world.cepi.kstom.serializer.UpdateOptionSerializer
 import world.cepi.kstom.serializer.VectorSerializer
-import world.cepi.kstom.util.component1
-import world.cepi.kstom.util.component2
-import world.cepi.kstom.util.component3
-import world.cepi.kstom.util.spread
+import world.cepi.kstom.util.*
 import world.cepi.mob.mob.Mob
 import world.cepi.mob.util.MobUtils
+import java.time.Duration
 
 @Serializable
 class Projectile(
     @Serializable(with = VectorSerializer::class)
     var power: Vector = Vector(15.0, 15.0, 15.0),
-    @Serializable(with = UpdateOptionSerializer::class)
-    val updateOption: UpdateOption = UpdateOption(10, TimeUnit.TICK),
+    @Serializable(with = DurationSerializer::class)
+    val updateOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
     @Serializable(with = VectorSerializer::class)
     var recoil: Vector = Vector(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
@@ -43,7 +40,7 @@ class Projectile(
     fun shoot(mob: Mob, shooter: Entity) {
 
         // Respect cooldown
-        if (System.currentTimeMillis() - lastTime() < updateOption.toMilliseconds()) {
+        if (System.currentTimeMillis() - lastTime() < updateOption.toMillis()) {
 
             if (shooter is Player) {
                 shooter.playSound(
@@ -75,28 +72,28 @@ class Projectile(
             shooter.playSound(sound!!, x, y, z)
         }
 
-        val shootDirection = shooter.position.clone()
+
+        val shootPosition = shooter.position.clone()
             .add(.0, shooter.eyeHeight / 2, .0)
             .add(shooter.position.direction
                 .clone().normalize()
                 .divide(Vector(5.0, 5.0, 5.0)).toPosition()
-            ).toVector().spread(spread)
+            )
+
+        val shootDirection = shooter.eyePosition().direction
 
         repeat(amount) {
             val entity = mob.generateMob() ?: return
 
+            val spreadVector = shootDirection.clone().spread(spread).normalize()
+
             entity.setInstance(
                 shooter.instance ?: return,
-                shooter.position.clone()
-                    .add(.0, shooter.eyeHeight / 2, .0)
-                    .add(shooter.position.direction
-                        .clone().normalize()
-                        .divide(Vector(5.0, 5.0, 5.0)).toPosition()
-                    )
+                shootPosition
             )
 
             // Add forward projectile speed
-            entity.velocity.add(entity.position.direction.clone().normalize().multiply(power))
+            entity.velocity.add(spreadVector.normalize().multiply(power))
         }
 
         // Add recoil

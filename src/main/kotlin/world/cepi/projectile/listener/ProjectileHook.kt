@@ -5,7 +5,7 @@ import net.minestom.server.event.player.PlayerUseItemEvent
 import net.minestom.server.event.player.PlayerUseItemOnBlockEvent
 import net.minestom.server.event.trait.PlayerEvent
 import world.cepi.mob.mob.mobEgg
-import world.cepi.projectile.heldProjectile
+import world.cepi.projectile.structure.heldProjectile
 
 internal object ProjectileHook {
 
