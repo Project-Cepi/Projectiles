@@ -1,8 +1,11 @@
 package world.cepi.projectile.commands.properties
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.command.builder.Command
 import net.minestom.server.entity.Player
 import net.minestom.server.utils.Vector
+import world.cepi.kepi.messages.sendFormattedTranslatableMessage
 import world.cepi.kstom.command.addSyntax
 import world.cepi.kstom.item.and
 import world.cepi.kstom.item.clientData
@@ -28,10 +31,14 @@ internal open class GeneralVectorPropertySubcommand(
 
             val projectile = player.heldProjectile ?: return@addSyntax
 
+            val x: Double = context[PropertySubcommand.relativePosition]["x"]
+            val y: Double = context[PropertySubcommand.relativePosition]["y"]
+            val z: Double = context[PropertySubcommand.relativePosition]["z"]
+
             val position = Vector(
-                context[PropertySubcommand.relativePosition]["x"],
-                context[PropertySubcommand.relativePosition]["y"],
-                context[PropertySubcommand.relativePosition]["z"]
+                x,
+                y,
+                z
             )
 
             apply(projectile, position)
@@ -43,6 +50,12 @@ internal open class GeneralVectorPropertySubcommand(
                     }
                 }
             }
+
+            player.sendFormattedTranslatableMessage(
+                "projectile", "property.set",
+                Component.text(name, NamedTextColor.BLUE),
+                Component.text("$x $y $z", NamedTextColor.BLUE)
+            )
         }
     }
 

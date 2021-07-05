@@ -51,6 +51,9 @@ dependencies {
 
     // add energy
     compileOnly("com.github.Project-Cepi:EnergyExtension:12d8826a68")
+
+    // Add Kepi
+    compileOnly("com.github.Project-Cepi:Kepi:3d57f76a43")
 }
 tasks.withType<Test> {
     useJUnitPlatform()

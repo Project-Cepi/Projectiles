@@ -3,6 +3,7 @@ package world.cepi.projectile.commands
 import net.minestom.server.command.builder.Command
 import net.minestom.server.entity.Player
 import net.minestom.server.tag.Tag
+import world.cepi.kepi.messages.sendFormattedTranslatableMessage
 import world.cepi.kstom.command.addSyntax
 import world.cepi.kstom.command.arguments.literal
 import world.cepi.kstom.item.and
@@ -28,7 +29,7 @@ internal object ProjectileCommand : Command("projectile") {
 
             // Player can not have a projectile currently
             if (player.heldProjectile != null) {
-                sender.sendMessage("Do not hold a projectile!")
+                sender.sendFormattedTranslatableMessage("projectile", "required.none")
                 return@addSyntax
             }
 
@@ -45,12 +46,12 @@ internal object ProjectileCommand : Command("projectile") {
                 }
             }
 
-            player.sendMessage("Projectile created!")
+            player.sendFormattedTranslatableMessage("projectile", "create")
         }
 
         addSyntax(shoot) {
             if (!Projectile.hasProjectile(sender)) {
-                sender.sendMessage("You do not have a projectile!")
+                sender.sendFormattedTranslatableMessage("projectile", "required.hold")
                 return@addSyntax
             }
 
