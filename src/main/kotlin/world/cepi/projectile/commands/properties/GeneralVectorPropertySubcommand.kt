@@ -3,6 +3,7 @@ package world.cepi.projectile.commands.properties
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.command.builder.Command
+import net.minestom.server.command.builder.arguments.ArgumentType
 import net.minestom.server.entity.Player
 import net.minestom.server.utils.Vector
 import world.cepi.kepi.messages.sendFormattedTranslatableMessage
@@ -20,6 +21,8 @@ internal open class GeneralVectorPropertySubcommand(
 ) : Command(name) {
 
     init {
+
+        val oneAmount = ArgumentType.Double("amount").min(0.0).max(100.0)
 
         addSyntax(PropertySubcommand.relativePosition) {
 
@@ -55,6 +58,37 @@ internal open class GeneralVectorPropertySubcommand(
                 "projectile", "property.set",
                 Component.text(name, NamedTextColor.BLUE),
                 Component.text("$x $y $z", NamedTextColor.BLUE)
+            )
+        }
+
+        addSyntax(oneAmount) {
+
+            if (!Projectile.hasProjectile(sender)) {
+                return@addSyntax
+            }
+
+            val player = sender as Player
+
+            val projectile = player.heldProjectile ?: return@addSyntax
+
+            val amount = context[oneAmount]
+
+            val position = Vector(amount, amount, amount)
+
+            apply(projectile, position)
+
+            player.itemInMainHand = player.itemInMainHand.and {
+                withMeta {
+                    clientData {
+                        this[Projectile.projectileKey] = projectile
+                    }
+                }
+            }
+
+            player.sendFormattedTranslatableMessage(
+                "projectile", "property.set",
+                Component.text(name, NamedTextColor.BLUE),
+                Component.text(amount, NamedTextColor.BLUE)
             )
         }
     }

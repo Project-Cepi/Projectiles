@@ -9,6 +9,7 @@ import net.minestom.server.sound.SoundEvent
 import net.minestom.server.utils.Vector
 import net.minestom.server.utils.time.TimeUnit
 import world.cepi.energy.energy
+import world.cepi.kstom.Manager
 import world.cepi.kstom.item.get
 import world.cepi.kstom.serializer.DurationSerializer
 import world.cepi.kstom.serializer.SoundSerializer
@@ -22,8 +23,6 @@ import java.time.Duration
 class Projectile(
     @Serializable(with = VectorSerializer::class)
     var power: Vector = Vector(15.0, 15.0, 15.0),
-    @Serializable(with = DurationSerializer::class)
-    val updateOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
     @Serializable(with = VectorSerializer::class)
     var recoil: Vector = Vector(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
@@ -32,7 +31,11 @@ class Projectile(
     var sound: Sound? = null,
     var usedEnergy: Int = 0,
     @Serializable(with = VectorSerializer::class)
-    var spread: Vector = Vector(.0, .0, .0)
+    var spread: Vector = Vector(.0, .0, .0),
+    @Serializable(with = DurationSerializer::class)
+    var delayOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
+    @Serializable(with = DurationSerializer::class)
+    var decayOption: Duration = Duration.of(3, TimeUnit.SECOND),
 ) {
 
     fun lastTime() = lastTimeUsed.toLong()
@@ -40,7 +43,7 @@ class Projectile(
     fun shoot(mob: Mob, shooter: Entity) {
 
         // Respect cooldown
-        if (System.currentTimeMillis() - lastTime() < updateOption.toMillis()) {
+        if (System.currentTimeMillis() - lastTime() < delayOption.toMillis()) {
 
             if (shooter is Player) {
                 shooter.playSound(
@@ -65,6 +68,7 @@ class Projectile(
             shooter.energy -= usedEnergy
         }
 
+        // Add sound
         if (sound != null && shooter is Player) {
 
             val (x, y, z) = shooter.position
@@ -73,6 +77,7 @@ class Projectile(
         }
 
 
+        // Get the position to shoot from
         val shootPosition = shooter.position.clone()
             .add(.0, shooter.eyeHeight / 2, .0)
             .add(shooter.position.direction
@@ -91,6 +96,10 @@ class Projectile(
                 shooter.instance ?: return,
                 shootPosition
             )
+
+            Manager.scheduler.buildTask {
+                entity.remove()
+            }.delay(decayOption).schedule()
 
             // Add forward projectile speed
             entity.velocity.add(spreadVector.normalize().multiply(power))

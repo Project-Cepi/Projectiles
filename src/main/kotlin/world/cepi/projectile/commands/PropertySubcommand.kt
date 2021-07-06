@@ -23,7 +23,8 @@ internal object PropertySubcommand : Command("property") {
         addSubcommands(
             RecoilPropertySubcommand, PowerPropertySubcommand,
             AmountPropertySubcommand, SoundPropertySubcommand,
-            EnergyPropertySubcommand, SpreadPropertySubcommand
+            EnergyPropertySubcommand, SpreadPropertySubcommand,
+            DelayPropertySubcommand, DecayPropertySubcommand
         )
     }
 
