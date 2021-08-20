@@ -5,7 +5,8 @@
   "dependencies": [
     "KStom",
     "EnergyExtension",
-    "Kepi"
+    "Kepi",
+    "MobExtension"
   ],
   "meta": {
     "downloadURL": "https://github.com/Project-Cepi/Projectiles/releases/download/latest/Projectiles-1.0.0-all.jar"

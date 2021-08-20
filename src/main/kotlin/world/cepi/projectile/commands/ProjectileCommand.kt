@@ -7,9 +7,9 @@ import world.cepi.kepi.messages.sendFormattedTranslatableMessage
 import world.cepi.kstom.command.addSyntax
 import world.cepi.kstom.command.arguments.literal
 import world.cepi.kstom.item.and
-import world.cepi.kstom.item.clientData
 import world.cepi.kstom.item.withMeta
 import world.cepi.mob.mob.mobEgg
+import world.cepi.kstom.item.set
 import world.cepi.mob.util.MobUtils
 import world.cepi.projectile.structure.Projectile
 import world.cepi.projectile.structure.heldProjectile
@@ -40,9 +40,8 @@ internal object ProjectileCommand : Command("projectile") {
 
                     this.set(Tag.Byte("noSpawn"), 1)
 
-                    clientData {
-                        this[Projectile.projectileKey] = projectile
-                    }
+                    this[Projectile.projectileKey] = projectile
+
                 }
             }
 

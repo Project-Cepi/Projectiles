@@ -8,7 +8,7 @@ import net.minestom.server.entity.Player
 import world.cepi.kepi.messages.sendFormattedTranslatableMessage
 import world.cepi.kstom.command.addSyntax
 import world.cepi.kstom.item.and
-import world.cepi.kstom.item.clientData
+import world.cepi.kstom.item.set
 import world.cepi.kstom.item.withMeta
 import world.cepi.projectile.structure.Projectile
 import world.cepi.projectile.structure.heldProjectile
@@ -37,9 +37,7 @@ internal open class GeneralSingleArgumentPropertySubcommand<T>(
 
             player.itemInMainHand = player.itemInMainHand.and {
                 withMeta {
-                    clientData {
-                        this[Projectile.projectileKey] = projectile
-                    }
+                    this[Projectile.projectileKey] = projectile
                 }
             }
 

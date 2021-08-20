@@ -3,10 +3,10 @@ package world.cepi.projectile.structure
 import kotlinx.serialization.Serializable
 import net.kyori.adventure.sound.Sound
 import net.minestom.server.command.CommandSender
+import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.sound.SoundEvent
-import net.minestom.server.utils.Vector
 import net.minestom.server.utils.time.TimeUnit
 import world.cepi.energy.energy
 import world.cepi.kstom.Manager
@@ -22,16 +22,16 @@ import java.time.Duration
 @Serializable
 class Projectile(
     @Serializable(with = VectorSerializer::class)
-    var power: Vector = Vector(15.0, 15.0, 15.0),
+    var power: Vec = Vec(15.0, 15.0, 15.0),
     @Serializable(with = VectorSerializer::class)
-    var recoil: Vector = Vector(.0, .0, .0),
+    var recoil: Vec = Vec(.0, .0, .0),
     var lastTimeUsed: String = System.currentTimeMillis().toString(),
     var amount: Int = 1,
     @Serializable(with = SoundSerializer::class)
     var sound: Sound? = null,
     var usedEnergy: Int = 0,
     @Serializable(with = VectorSerializer::class)
-    var spread: Vector = Vector(.0, .0, .0),
+    var spread: Vec = Vec(.0, .0, .0),
     @Serializable(with = DurationSerializer::class)
     var delayOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
     @Serializable(with = DurationSerializer::class)
@@ -47,8 +47,8 @@ class Projectile(
 
             if (shooter is Player) {
                 shooter.playSound(
-                    Sound.sound(SoundEvent.NOTE_BLOCK_PLING, Sound.Source.MASTER, 1f, 0.5f),
-                    shooter.position.x, shooter.position.y, shooter.position.z
+                    Sound.sound(SoundEvent.BLOCK_NOTE_BLOCK_PLING, Sound.Source.MASTER, 1f, 0.5f),
+                    shooter.position.x(), shooter.position.y(), shooter.position.z()
                 )
             }
 
@@ -59,8 +59,8 @@ class Projectile(
         if (shooter is Player && shooter.energy < usedEnergy) {
 
             shooter.playSound(
-                Sound.sound(SoundEvent.NOTE_BLOCK_PLING, Sound.Source.MASTER, 1f, 0.5f),
-                shooter.position.x, shooter.position.y, shooter.position.z
+                Sound.sound(SoundEvent.BLOCK_NOTE_BLOCK_PLING, Sound.Source.MASTER, 1f, 0.5f),
+                shooter.position.x(), shooter.position.y(), shooter.position.z()
             )
 
             return
@@ -78,19 +78,19 @@ class Projectile(
 
 
         // Get the position to shoot from
-        val shootPosition = shooter.position.clone()
+        val shootPosition = shooter.position
             .add(.0, shooter.eyeHeight / 2, .0)
-            .add(shooter.position.direction
-                .clone().normalize()
-                .divide(Vector(5.0, 5.0, 5.0)).toPosition()
+            .add(shooter.position.direction()
+                .normalize()
+                .div(Vec(5.0, 5.0, 5.0)).asPosition()
             )
 
-        val shootDirection = shooter.eyePosition().direction
+        val shootDirection = shooter.eyePosition().direction()
 
         repeat(amount) {
             val entity = mob.generateMob() ?: return
 
-            val spreadVector = shootDirection.clone().spread(spread).normalize()
+            val spreadVector = shootDirection.spread(spread).normalize()
 
             entity.setInstance(
                 shooter.instance ?: return,
@@ -102,12 +102,12 @@ class Projectile(
             }.delay(decayOption).schedule()
 
             // Add forward projectile speed
-            entity.velocity.add(spreadVector.normalize().multiply(power))
+            entity.velocity.add(spreadVector.normalize().mul(power))
         }
 
         // Add recoil
-        shooter.velocity.add(shooter.position.direction.clone()
-            .normalize().multiply(-1).multiply(recoil))
+        shooter.velocity.add(shooter.position.direction()
+            .normalize().mul(-1.0).mul(recoil))
 
         lastTimeUsed = System.currentTimeMillis().toString()
     }
