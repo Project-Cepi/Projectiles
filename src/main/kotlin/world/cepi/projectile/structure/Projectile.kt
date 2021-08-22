@@ -138,3 +138,7 @@ class Projectile(
 
 val Player.heldProjectile: Projectile?
     get() = this.itemInMainHand.meta.get(Projectile.projectileKey)
+
+
+val Player.heldProjectileOffHand: Projectile?
+    get() = this.itemInOffHand.meta.get(Projectile.projectileKey)
