@@ -90,7 +90,7 @@ class Projectile(
         repeat(amount) {
             val entity = mob.generateMob() ?: return
 
-            val spreadVector = shootDirection.spread(spread).normalize()
+            val spreadVector = shootDirection.spread(spread.x(), spread.y(), spread.z()).normalize()
 
             entity.setInstance(
                 shooter.instance ?: return,
