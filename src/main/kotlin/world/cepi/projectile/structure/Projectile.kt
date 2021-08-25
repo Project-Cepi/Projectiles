@@ -102,11 +102,12 @@ class Projectile(
             }.delay(decayOption).schedule()
 
             // Add forward projectile speed
-            entity.velocity.add(spreadVector.normalize().mul(power))
+            entity.velocity =
+                entity.velocity.add(spreadVector.normalize().mul(power))
         }
 
         // Add recoil
-        shooter.velocity.add(shooter.position.direction()
+        shooter.velocity = shooter.velocity.add(shooter.position.direction()
             .normalize().mul(-1.0).mul(recoil))
 
         lastTimeUsed = System.currentTimeMillis().toString()
