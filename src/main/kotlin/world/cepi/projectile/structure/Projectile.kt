@@ -25,7 +25,7 @@ class Projectile(
     var power: Vec = Vec(15.0, 15.0, 15.0),
     @Serializable(with = VectorSerializer::class)
     var recoil: Vec = Vec(.0, .0, .0),
-    var lastTimeUsed: String = System.currentTimeMillis().toString(),
+    var lastTimeUsed: Long = System.currentTimeMillis(),
     var amount: Int = 1,
     @Serializable(with = SoundSerializer::class)
     var sound: Sound? = null,
@@ -38,12 +38,10 @@ class Projectile(
     var decayOption: Duration = Duration.of(3, TimeUnit.SECOND),
 ) {
 
-    fun lastTime() = lastTimeUsed.toLong()
-
     fun shoot(mob: Mob, shooter: Entity) {
 
         // Respect cooldown
-        if (System.currentTimeMillis() - lastTime() < delayOption.toMillis()) {
+        if (System.currentTimeMillis() - lastTimeUsed < delayOption.toMillis()) {
 
             if (shooter is Player) {
                 shooter.playSound(
@@ -110,7 +108,7 @@ class Projectile(
         shooter.velocity = shooter.velocity.add(shooter.position.direction()
             .normalize().mul(-1.0).mul(recoil))
 
-        lastTimeUsed = System.currentTimeMillis().toString()
+        lastTimeUsed = System.currentTimeMillis()
     }
 
     companion object {
