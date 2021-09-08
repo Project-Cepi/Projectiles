@@ -38,13 +38,13 @@ dependencies {
     compileOnly(kotlin("reflect"))
 
     // Compile Minestom into project
-    compileOnly("com.github.Minestom:Minestom:2ef8e957a0")
+    compileOnly("com.github.Minestom:Minestom:21bac6fba4")
 
     // import kotlinx serialization
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
     // add kstom
-    compileOnly("com.github.Project-Cepi:KStom:efa0e5fb97")
+    compileOnly("com.github.Project-Cepi:KStom:dff80d98c4")
 
     // add mobs
     compileOnly("com.github.Project-Cepi:MobExtension:b1d7b0cc8e")
@@ -53,7 +53,7 @@ dependencies {
     compileOnly("com.github.Project-Cepi:EnergyExtension:12d8826a68")
 
     // Add Kepi
-    compileOnly("com.github.Project-Cepi:Kepi:3d57f76a43")
+    compileOnly("com.github.Project-Cepi:Kepi:65de73c2d8")
 }
 tasks.withType<Test> {
     useJUnitPlatform()
