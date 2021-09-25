@@ -1,8 +1,7 @@
 package world.cepi.projectile.commands
 
-import net.minestom.server.command.builder.Command
 import net.minestom.server.command.builder.arguments.ArgumentType
-import world.cepi.kstom.command.addSubcommands
+import world.cepi.kstom.command.kommand.Kommand
 import world.cepi.projectile.commands.properties.*
 import world.cepi.projectile.commands.properties.AmountPropertySubcommand
 import world.cepi.projectile.commands.properties.EnergyPropertySubcommand
@@ -10,7 +9,7 @@ import world.cepi.projectile.commands.properties.PowerPropertySubcommand
 import world.cepi.projectile.commands.properties.RecoilPropertySubcommand
 import world.cepi.projectile.commands.properties.SoundPropertySubcommand
 
-internal object PropertySubcommand : Command("property") {
+internal object PropertySubcommand : Kommand(name ="property") {
 
     val relativePosition = ArgumentType.Group(
         "pos",
@@ -27,5 +26,4 @@ internal object PropertySubcommand : Command("property") {
             DelayPropertySubcommand, DecayPropertySubcommand
         )
     }
-
 }

@@ -44,7 +44,7 @@ dependencies {
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
     // add kstom
-    compileOnly("com.github.Project-Cepi:KStom:dff80d98c4")
+    compileOnly("com.github.Project-Cepi:KStom:e3ddf8f437")
 
     // add mobs
     compileOnly("com.github.Project-Cepi:MobExtension:b1d7b0cc8e")
@@ -53,7 +53,7 @@ dependencies {
     compileOnly("com.github.Project-Cepi:EnergyExtension:12d8826a68")
 
     // Add Kepi
-    compileOnly("com.github.Project-Cepi:Kepi:65de73c2d8")
+    compileOnly("com.github.Project-Cepi:Kepi:23749ad45e")
 }
 tasks.withType<Test> {
     useJUnitPlatform()
@@ -89,13 +89,13 @@ tasks {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 
 val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
+compileKotlin.kotlinOptions.jvmTarget = JavaVersion.VERSION_16.toString()
 
 compileKotlin.kotlinOptions {
     freeCompilerArgs = listOf("-Xinline-classes")
