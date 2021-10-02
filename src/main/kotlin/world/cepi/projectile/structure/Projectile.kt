@@ -7,10 +7,13 @@ import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.sound.SoundEvent
+import net.minestom.server.tag.Tag
 import net.minestom.server.utils.time.TimeUnit
 import world.cepi.energy.energy
 import world.cepi.kstom.Manager
 import world.cepi.kstom.item.get
+import world.cepi.kstom.item.set
+import world.cepi.kstom.nbt.TagUUID
 import world.cepi.kstom.serializer.DurationSerializer
 import world.cepi.kstom.serializer.SoundSerializer
 import world.cepi.kstom.serializer.VectorSerializer
@@ -98,6 +101,8 @@ class Projectile(
             Manager.scheduler.buildTask {
                 entity.remove()
             }.delay(decayOption).schedule()
+
+            entity.setTag(TagUUID("caster"), shooter.uuid)
 
             // Add forward projectile speed
             entity.velocity =
