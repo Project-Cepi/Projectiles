@@ -1,5 +1,5 @@
 # Projectiles
-Projectiles extend the mob systme, allowing for launching mobs from your own hand or from items
+Projectiles extend the mob system, allowing for launching mobs from your own hand or from items
 
 ## Installation
 
