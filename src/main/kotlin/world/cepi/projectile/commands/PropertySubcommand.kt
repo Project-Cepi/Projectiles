@@ -23,7 +23,8 @@ internal object PropertySubcommand : Kommand(name ="property") {
             RecoilPropertySubcommand, PowerPropertySubcommand,
             AmountPropertySubcommand, SoundPropertySubcommand,
             EnergyPropertySubcommand, SpreadPropertySubcommand,
-            DelayPropertySubcommand, DecayPropertySubcommand
+            DelayPropertySubcommand, DecayPropertySubcommand,
+            ParticlePropertySubcommand
         )
     }
 }
