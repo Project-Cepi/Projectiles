@@ -15,8 +15,8 @@ import world.cepi.projectile.structure.heldProjectile
 
 internal object ProjectileCommand : Kommand({
 
-    val create = "create".literal()
-    val shoot = "shoot".literal()
+    val create by literal
+    val shoot by literal
 
     syntax(create).onlyPlayers {
 
@@ -34,7 +34,7 @@ internal object ProjectileCommand : Kommand({
         player.itemInMainHand = player.itemInMainHand.and {
             withMeta {
 
-                this.set(Tag.Byte("noSpawn"), 1)
+                this[Tag.Byte("noSpawn")] = 1
 
                 this[Projectile.projectileKey] = projectile
 
