@@ -12,7 +12,7 @@ internal object ProjectileHook {
     private fun hook(event: PlayerEvent) = with(event) {
         val projectile = player.heldProjectile ?: return
 
-        projectile.shoot(player.mobEgg ?: return, player)
+        player.itemInMainHand = projectile.shoot(player.mobEgg ?: return, player).generateItem(player.itemInMainHand)
     }
 
     fun hookUseOnBlock(event: PlayerUseItemOnBlockEvent) = hook(event)

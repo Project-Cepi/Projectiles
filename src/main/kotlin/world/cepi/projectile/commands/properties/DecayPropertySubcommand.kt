@@ -5,6 +5,6 @@ import java.time.Duration
 
 internal object DecayPropertySubcommand : GeneralSingleArgumentPropertySubcommand<Duration>(
     "decay",
-    { decayOption = it },
+    { copy(decayOption = it) },
     ArgumentType.Time("decay")
 )

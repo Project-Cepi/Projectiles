@@ -5,6 +5,6 @@ import java.time.Duration
 
 internal object DelayPropertySubcommand : GeneralSingleArgumentPropertySubcommand<Duration>(
     "delay",
-    { delayOption = it },
+    { copy(delayOption = it) },
     ArgumentType.Time("delay")
 )

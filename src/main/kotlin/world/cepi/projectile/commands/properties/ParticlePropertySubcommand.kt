@@ -5,6 +5,6 @@ import net.minestom.server.particle.Particle
 
 internal object ParticlePropertySubcommand : GeneralSingleArgumentPropertySubcommand<Particle>(
     "particle",
-    { particle = it },
+    { copy(particle = it) },
     ArgumentParticle("particleArgument")
 )

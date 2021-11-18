@@ -17,7 +17,7 @@ import world.cepi.projectile.structure.heldProjectile
 
 internal open class GeneralVectorPropertySubcommand(
     name: String,
-    apply: Projectile.(Vec) -> Unit
+    apply: Projectile.(Vec) -> Projectile
 ) : Kommand({
 
     val oneAmount = ArgumentType.Double("amount").min(0.0).max(100.0)
@@ -28,21 +28,15 @@ internal open class GeneralVectorPropertySubcommand(
             return@onlyPlayers
         }
 
-        val projectile = player.heldProjectile ?: return@onlyPlayers
-
         val x: Double = context[PropertySubcommand.relativePosition]["x"]
         val y: Double = context[PropertySubcommand.relativePosition]["y"]
         val z: Double = context[PropertySubcommand.relativePosition]["z"]
 
         val position = Vec(x, y, z)
 
-        apply(projectile, position)
+        val projectile = player.heldProjectile?.let { apply(it, position) } ?: return@onlyPlayers
 
-        player.itemInMainHand = player.itemInMainHand.and {
-            withMeta {
-                this[Projectile.projectileKey] = projectile
-            }
-        }
+        player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
         player.sendFormattedTranslatableMessage(
             "projectile", "property.set",
@@ -65,11 +59,7 @@ internal open class GeneralVectorPropertySubcommand(
 
         apply(projectile, position)
 
-        player.itemInMainHand = player.itemInMainHand.and {
-            withMeta {
-                this[Projectile.projectileKey] = projectile
-            }
-        }
+        player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
         player.sendFormattedTranslatableMessage(
             "projectile", "property.set",

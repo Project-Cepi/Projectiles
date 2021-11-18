@@ -13,7 +13,7 @@ import world.cepi.projectile.structure.heldProjectile
 
 internal open class GeneralSingleArgumentPropertySubcommand<T>(
     name: String,
-    apply: Projectile.(T) -> Unit,
+    apply: Projectile.(T) -> Projectile,
     argument: Argument<T>
 ) : Kommand({
 
@@ -23,17 +23,11 @@ internal open class GeneralSingleArgumentPropertySubcommand<T>(
             return@onlyPlayers
         }
 
-        val projectile = player.heldProjectile ?: return@onlyPlayers
+        val projectile = player.heldProjectile?.let { apply(it, !argument) } ?: return@onlyPlayers
 
         val genArg = context[argument]
 
-        apply(projectile, genArg)
-
-        player.itemInMainHand = player.itemInMainHand.and {
-            withMeta {
-                this[Projectile.projectileKey] = projectile
-            }
-        }
+        player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
         player.sendFormattedTranslatableMessage(
             "projectile", "property.set",

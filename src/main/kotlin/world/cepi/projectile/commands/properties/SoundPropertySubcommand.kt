@@ -9,10 +9,10 @@ import world.cepi.kstom.command.arguments.defaultValue
 
 internal object SoundPropertySubcommand : GeneralSingleArgumentPropertySubcommand<CommandContext>(
     "sound",
-    { sound = Sound.sound(
+    { copy(sound = Sound.sound(
         it.get<Key>("soundName"), it.get<Sound.Source>("source"),
         it["volume"], it["pitch"]
-    ) },
+    )) },
     ArgumentType.Group(
         "fullSound",
         ArgumentType.String("soundName").map {

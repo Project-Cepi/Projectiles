@@ -31,15 +31,7 @@ internal object ProjectileCommand : Kommand({
 
         val projectile = Projectile()
 
-        player.itemInMainHand = player.itemInMainHand.and {
-            withMeta {
-
-                this[Tag.Byte("noSpawn")] = 1
-
-                this[Projectile.projectileKey] = projectile
-
-            }
-        }
+        player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
         player.sendFormattedTranslatableMessage("projectile", "create")
     }

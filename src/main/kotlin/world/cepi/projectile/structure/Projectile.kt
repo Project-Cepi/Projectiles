@@ -7,6 +7,7 @@ import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.event.entity.EntityTickEvent
+import net.minestom.server.item.ItemStack
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
 import net.minestom.server.sound.SoundEvent
@@ -16,8 +17,7 @@ import net.minestom.server.utils.time.TimeUnit
 import world.cepi.energy.energy
 import world.cepi.kstom.Manager
 import world.cepi.kstom.event.listenOnly
-import world.cepi.kstom.item.get
-import world.cepi.kstom.item.set
+import world.cepi.kstom.item.*
 import world.cepi.kstom.nbt.TagUUID
 import world.cepi.kstom.serializer.DurationSerializer
 import world.cepi.kstom.serializer.ParticleSerializer
@@ -29,36 +29,41 @@ import world.cepi.mob.util.MobUtils
 import java.time.Duration
 
 @Serializable
-class Projectile(
+data class Projectile(
     @Serializable(with = VectorSerializer::class)
-    var power: Vec = Vec(15.0, 15.0, 15.0),
+    val power: Vec = Vec(15.0, 15.0, 15.0),
 
     @Serializable(with = VectorSerializer::class)
-    var recoil: Vec = Vec(.0, .0, .0),
+    val recoil: Vec = Vec(.0, .0, .0),
 
-    var lastTimeUsed: Long = System.currentTimeMillis(),
+    val lastTimeUsed: Long = System.currentTimeMillis(),
 
-    var amount: Int = 1,
+    val amount: Int = 1,
 
     @Serializable(with = SoundSerializer::class)
-    var sound: Sound? = null,
+    val sound: Sound? = null,
 
-    var usedEnergy: Int = 0,
+    val usedEnergy: Int = 0,
 
     @Serializable(with = VectorSerializer::class)
-    var spread: Vec = Vec(.0, .0, .0),
+    val spread: Vec = Vec(.0, .0, .0),
 
     @Serializable(with = DurationSerializer::class)
-    var delayOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
+    val delayOption: Duration = Duration.of(10, TimeUnit.SERVER_TICK),
 
     @Serializable(with = DurationSerializer::class)
-    var decayOption: Duration = Duration.of(3, TimeUnit.SECOND),
+    val decayOption: Duration = Duration.of(3, TimeUnit.SECOND),
 
     @Serializable(with = ParticleSerializer::class)
-    var particle: Particle? = null,
+    val particle: Particle? = null,
 ) {
 
-    fun shoot(mob: Mob, shooter: Entity) {
+    fun generateItem(itemStack: ItemStack) = itemStack.and {
+        this[Tag.Byte("noSpawn")] = 1
+        this[projectileKey] = this
+    }
+
+    fun shoot(mob: Mob, shooter: Entity): Projectile {
 
         // Respect cooldown
         if (System.currentTimeMillis() - lastTimeUsed < delayOption.toMillis()) {
@@ -70,7 +75,7 @@ class Projectile(
                 )
             }
 
-            return
+            return this
         }
 
         // Respect energy
@@ -81,7 +86,7 @@ class Projectile(
                 shooter.position.x(), shooter.position.y(), shooter.position.z()
             )
 
-            return
+            return this
         } else if (shooter is Player) {
             shooter.energy -= usedEnergy
         }
@@ -91,7 +96,7 @@ class Projectile(
 
             val (x, y, z) = shooter.position
 
-            shooter.playSound(sound!!, x, y, z)
+            shooter.playSound(sound, x, y, z)
         }
 
 
@@ -106,12 +111,12 @@ class Projectile(
         val shootDirection = shooter.eyePosition().direction()
 
         repeat(amount) {
-            val entity = mob.generateMob() ?: return
+            val entity = mob.generateMob() ?: return this
 
             val spreadVector = shootDirection.spread(spread.x(), spread.y(), spread.z()).normalize()
 
             entity.mob.setInstance(
-                shooter.instance ?: return,
+                shooter.instance ?: return this,
                 shootPosition
             )
 
@@ -130,7 +135,7 @@ class Projectile(
                 if (particle == null) return@listenOnly
 
                 val packet = ParticlePacket().apply {
-                    particleId = particle!!.id()
+                    particleId = particle.id()
                     longDistance = false
                     x = entity.mob.position.x()
                     y = entity.mob.position.y()
@@ -149,7 +154,7 @@ class Projectile(
         shooter.velocity = shooter.velocity.add(shooter.position.direction()
             .normalize().mul(-1.0).mul(recoil))
 
-        lastTimeUsed = System.currentTimeMillis()
+        return this.copy(lastTimeUsed = System.currentTimeMillis())
     }
 
     companion object {
