@@ -48,6 +48,6 @@ internal object ProjectileCommand : Kommand({
         projectile.shoot(player.mobEgg ?: return@onlyPlayers, player)
     }
 
-    addSubcommands(PropertySubcommand)
+    addSubcommands(PropertySubcommand, ProjectileEventSubcommand)
 
 }, "projectile")

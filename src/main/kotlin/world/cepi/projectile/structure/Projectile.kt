@@ -14,6 +14,8 @@ import net.minestom.server.sound.SoundEvent
 import net.minestom.server.tag.Tag
 import net.minestom.server.utils.PacketUtils
 import net.minestom.server.utils.time.TimeUnit
+import world.cepi.actions.ActionItem
+import world.cepi.actions.ActionSerializer
 import world.cepi.energy.energy
 import world.cepi.kstom.Manager
 import world.cepi.kstom.event.listenOnly
@@ -56,11 +58,13 @@ data class Projectile(
 
     @Serializable(with = ParticleSerializer::class)
     val particle: Particle? = null,
+
+    val decayEvents: List<ActionItem> = listOf()
 ) {
 
     fun generateItem(itemStack: ItemStack) = itemStack.and {
         this[Tag.Byte("noSpawn")] = 1
-        this[projectileKey] = this
+        this[projectileKey, ActionSerializer.module] = this@Projectile
     }
 
     fun shoot(mob: Mob, shooter: Entity): Projectile {
@@ -121,6 +125,7 @@ data class Projectile(
             )
 
             Manager.scheduler.buildTask {
+                decayEvents.forEach { it(entity.mob, entity.mob) }
                 entity.mob.remove()
             }.delay(decayOption).schedule()
 
