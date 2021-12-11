@@ -47,7 +47,7 @@ dependencies {
     compileOnly("com.github.Project-Cepi:KStom:2731335167")
 
     // add mobs
-    compileOnly("com.github.Project-Cepi:MobExtension:babd042609")
+    compileOnly("com.github.Project-Cepi:MobExtension:05a9532b57")
 
     // add energy
     compileOnly("com.github.Project-Cepi:EnergyExtension:12d8826a68")
