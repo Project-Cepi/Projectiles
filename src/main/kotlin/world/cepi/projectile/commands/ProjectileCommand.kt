@@ -2,6 +2,7 @@ package world.cepi.projectile.commands
 
 import net.minestom.server.entity.Player
 import net.minestom.server.tag.Tag
+import world.cepi.kepi.command.subcommand.applyHelp
 import world.cepi.kepi.messages.sendFormattedTranslatableMessage
 import world.cepi.kstom.command.arguments.literal
 import world.cepi.kstom.command.kommand.Kommand
@@ -52,5 +53,19 @@ internal object ProjectileCommand : Kommand({
     }
 
     addSubcommands(PropertySubcommand, ProjectileEventSubcommand)
+
+    applyHelp {
+        """
+            Projectiles allow you to throw 
+            an amount of a mob with a <blue>force<gray>.
+            
+            To create a projectile, hold nothing or a mob in your hand and run
+            <yellow>/projectile create
+            
+            To change how it works, use <yellow>/projectile property (name) (values...)
+            
+            Projectiles also have an <blue>Action Event System.
+        """.trimIndent()
+    }
 
 }, "projectile")
