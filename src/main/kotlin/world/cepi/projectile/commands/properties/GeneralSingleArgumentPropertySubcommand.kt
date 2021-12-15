@@ -14,8 +14,21 @@ import world.cepi.projectile.structure.heldProjectile
 internal open class GeneralSingleArgumentPropertySubcommand<T>(
     name: String,
     apply: Projectile.(T) -> Projectile,
+    grab: Projectile.() -> String,
     argument: Argument<T>
 ) : Kommand({
+
+    default {
+        if (!Projectile.hasProjectile(sender)) {
+            return@default
+        }
+
+        player.sendFormattedTranslatableMessage(
+            "projectile", "property.grab.simple",
+            Component.text(name.replaceFirstChar { it.uppercase() }, NamedTextColor.GRAY),
+            Component.text(grab(player.heldProjectile!!), NamedTextColor.BLUE)
+        )
+    }
 
     syntax(argument).onlyPlayers {
 

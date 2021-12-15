@@ -2,8 +2,8 @@ package world.cepi.projectile.structure
 
 sealed class CollideOption {
 
-    class Explode : CollideOption()
-    class Dissapear : CollideOption()
-    class None : CollideOption()
+    object Explode : CollideOption()
+    object Dissapear : CollideOption()
+    object None : CollideOption()
 
 }

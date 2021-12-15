@@ -17,10 +17,27 @@ import world.cepi.projectile.structure.heldProjectile
 
 internal open class GeneralVectorPropertySubcommand(
     name: String,
-    apply: Projectile.(Vec) -> Projectile
+    apply: Projectile.(Vec) -> Projectile,
+    grab: Projectile.() -> Vec
 ) : Kommand({
 
     val oneAmount = ArgumentType.Double("amount").min(0.0).max(100.0)
+
+    default {
+        if (!Projectile.hasProjectile(sender)) {
+            return@default
+        }
+
+        val position = grab(player.heldProjectile!!)
+
+        player.sendFormattedTranslatableMessage(
+            "projectile", "property.grab.vec",
+            Component.text(name.replaceFirstChar { it.uppercase() }, NamedTextColor.GRAY),
+            Component.text(position.x(), NamedTextColor.RED),
+            Component.text(position.y(), NamedTextColor.GREEN),
+            Component.text(position.z(), NamedTextColor.BLUE),
+        )
+    }
 
     syntax(PropertySubcommand.relativePosition).onlyPlayers {
 

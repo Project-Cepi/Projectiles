@@ -13,6 +13,7 @@ internal object SoundPropertySubcommand : GeneralSingleArgumentPropertySubcomman
         it.get<Key>("soundName"), it.get<Sound.Source>("source"),
         it["volume"], it["pitch"]
     )) },
+    { sound.toString() },
     ArgumentType.Group(
         "fullSound",
         ArgumentType.String("soundName").map {
