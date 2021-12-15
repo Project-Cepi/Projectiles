@@ -51,7 +51,7 @@ internal open class GeneralVectorPropertySubcommand(
 
         val position = Vec(x, y, z)
 
-        val projectile = player.heldProjectile?.let { apply(it, position) } ?: return@onlyPlayers
+        val projectile = player.heldProjectile?.apply(position) ?: return@onlyPlayers
 
         player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
@@ -68,13 +68,10 @@ internal open class GeneralVectorPropertySubcommand(
             return@onlyPlayers
         }
 
-        val projectile = player.heldProjectile ?: return@onlyPlayers
-
         val amount = context[oneAmount]
-
         val position = Vec(amount, amount, amount)
 
-        apply(projectile, position)
+        val projectile = player.heldProjectile?.apply(position) ?: return@onlyPlayers
 
         player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 

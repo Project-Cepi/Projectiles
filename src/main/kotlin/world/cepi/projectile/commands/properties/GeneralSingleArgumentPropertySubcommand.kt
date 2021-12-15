@@ -36,9 +36,9 @@ internal open class GeneralSingleArgumentPropertySubcommand<T>(
             return@onlyPlayers
         }
 
-        val projectile = player.heldProjectile?.let { apply(it, !argument) } ?: return@onlyPlayers
-
         val genArg = context[argument]
+
+        val projectile = player.heldProjectile?.apply(genArg) ?: return@onlyPlayers
 
         player.itemInMainHand = projectile.generateItem(player.itemInMainHand)
 
