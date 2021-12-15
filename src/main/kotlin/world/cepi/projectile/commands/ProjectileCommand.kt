@@ -1,5 +1,7 @@
 package world.cepi.projectile.commands
 
+import net.minestom.server.command.builder.arguments.ArgumentType
+import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.Player
 import net.minestom.server.tag.Tag
 import world.cepi.kepi.command.subcommand.applyHelp
@@ -14,13 +16,18 @@ import world.cepi.mob.mob.Mob
 import world.cepi.mob.util.MobUtils
 import world.cepi.projectile.structure.Projectile
 import world.cepi.projectile.structure.heldProjectile
+import java.util.function.Supplier
 
 internal object ProjectileCommand : Kommand({
 
     val create by literal
     val shoot by literal
 
-    syntax(create).onlyPlayers {
+    val createMobType = ArgumentType.EntityType("type").also {
+        it.defaultValue = Supplier { EntityType.ZOMBIE }
+    }
+
+    syntax(create, createMobType).onlyPlayers {
 
         // Player can not have a projectile currently
         if (player.heldProjectile != null) {
@@ -35,7 +42,10 @@ internal object ProjectileCommand : Kommand({
 
         val projectile = Projectile()
 
-        player.itemInMainHand = projectile.generateItem(player.mobEgg?.generateEgg(player.itemInMainHand) ?: Mob().generateEgg())
+        player.itemInMainHand = projectile.generateItem(
+            player.mobEgg?.generateEgg(player.itemInMainHand)
+                ?: Mob(type = !createMobType).generateEgg()
+        )
 
         player.sendFormattedTranslatableMessage("projectile", "create")
     }
