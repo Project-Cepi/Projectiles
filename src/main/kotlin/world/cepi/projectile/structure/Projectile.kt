@@ -139,18 +139,19 @@ data class Projectile(
             entity.eventNode.listenOnly<EntityTickEvent> {
                 if (particle == null) return@listenOnly
 
-                val packet = ParticlePacket().apply {
-                    particleId = particle.id()
-                    longDistance = false
-                    x = entity.mob.position.x()
-                    y = entity.mob.position.y()
-                    z = entity.mob.position.z()
-                    offsetX = 0f
-                    offsetY = 0f
-                    offsetZ = 0f
-                    particleCount = 1;
-                }
-
+                val packet = ParticlePacket(
+                    particle.id(),
+                    false,
+                    entity.mob.position.x(),
+                    entity.mob.position.y(),
+                    entity.mob.position.z(),
+                    0f,
+                    0f,
+                    0f,
+                    0f,
+                    1,
+                    byteArrayOf()
+                )
                 PacketUtils.sendGroupedPacket(entity.mob.viewers, packet)
             }
         }

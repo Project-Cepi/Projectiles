@@ -1,32 +1,34 @@
 package world.cepi.projectile
 
-import net.minestom.server.extensions.Extension;
-import world.cepi.kstom.command.register
-import world.cepi.kstom.command.unregister
+import net.minestom.server.extensions.Extension
 import world.cepi.kstom.event.listenOnly
+import world.cepi.kstom.util.log
+import world.cepi.kstom.util.node
 import world.cepi.projectile.commands.ProjectileCommand
 import world.cepi.projectile.listener.ProjectileHook
 
 class Projectiles : Extension() {
 
-    override fun initialize() {
+    override fun initialize(): LoadStatus {
 
-        eventNode.listenOnly(ProjectileHook::hookUse)
+        node.listenOnly(ProjectileHook::hookUse)
 
-        eventNode.listenOnly(ProjectileHook::hookUseOnBlock)
+        node.listenOnly(ProjectileHook::hookUseOnBlock)
 
-        eventNode.listenOnly(ProjectileHook::hookEntity)
+        node.listenOnly(ProjectileHook::hookEntity)
 
         ProjectileCommand.register()
 
-        logger.info("[Projectiles] has been enabled!")
+        log.info("[Projectiles] has been enabled!")
+
+        return LoadStatus.SUCCESS
     }
 
     override fun terminate() {
 
         ProjectileCommand.unregister()
 
-        logger.info("[Projectiles] has been disabled!")
+        log.info("[Projectiles] has been disabled!")
     }
 
 }
